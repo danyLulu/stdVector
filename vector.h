@@ -1,156 +1,167 @@
-#ifndef VECTOR_H
-#define VECTOR_H
-
-#include <cstddef>    
-#include <initializer_list> 
-#include <iterator>     
-#include <memory>       
-#include <stdexcept>   
+#include <iostream>
+#include <algorithm>
+#include <memory>
+#include <stdexcept>
 
 
-//шаблонный класс динамического массива (аналог std::vector)
+
 template <typename T>
-class Myvector{
-    public:
-    //типы-псевдонимы для совместимости с STL
-    using value_type = T;
-    using size_type = std::size_t;
-    using reference = T&;
-    using const_reference = const T&;
-    using iterator = T*;
-    using const_iterator = const T*;
-    using Pointer = T*;
-    using const_pointer = const T*;
-    using difference_type = std::ptrdiff_t;
 
+class MyVector{
     private:
+    T* data;
+    size_t size;
+    size_t capacity;
 
-    pointer data_ = nullptr;    
-    size_type size_ = 0;        
-    size_type capacity_ = 0;   
 
-    
-    //деаллокация памяти
-    void deallocate()noexcept{
-        if(data_){
-            std::allocate<T> alloc;
-            alloc.deallocate(data_, capacity_);
-            data_ = nullptr;
-            size_ = 0;
-            capacity_ = 0;
+    public:
+    MyVector() : data(nullptr), size(0), capacity(0){}
+
+    explicit MyVector(size_t count) : size(count),capacity(count){
+        data = new T[count];
+    }
+
+
+    ~MyVector(){
+        delete[] data;
+    }
+
+    //получение размера
+    size_t getSize() const{
+        return size;
+    }
+
+    //получение вместимости 
+    size_t getCapacity() const{
+        return capacity;
+    }
+
+    T& operator[](size_t index){
+        if(index >= size){
+
+            throw std::out_of_range("индекс выходит за пределы диапазона");
+        }
+        return data[index];
+    }
+
+    const T& operator[](size_t index)const{
+        if(index >= size){
+            throw std::out_of_range("индекс выходит за пределы диапазона");
+        }
+        return data[index];
+    }
+
+    void push_back(const T& value)noexcept{
+        if(size >= capacity){
+            size_t new_capacity = capacity == 0 ? 1 : capacity * 2;
+            reserve(new_capacity);
+        }
+        data[size++] = value;
+    }
+
+    void pop_back(){
+        if(size > 0){
+            size--;
         }
     }
 
-    //удаление объектов в диапазоне 
-    void destroy_range(pointer first, pointer last) noexcept {
-        for (pointer p = first; p != last; ++p) {
-            p->~T();
-        }
-    }
-    
-    //аллокация памяти под new_capacity элементов
-    void allocate(size_type new_capacity) {
-        if(new_capacity == 0) return;
-
-        std::allocator<T> alloc;
-        data_ = alloc.allocate(new_capacity);
-        capacity_ = new_capacity;
-    }
-
-    void reallocate(size_type new_capacity) {
-        if (new_capacity == 0) {
-            deallocate();
-            return;
-        }
-        
-        if (capacity_ == new_capacity) return;
-        
-        std::allocator<T> alloc;
-        pointer new_data = alloc.allocate(new_capacity);
-        
-        size_type old_size = size_;
-        
-        if (data_) {
-            for (size_type i = 0; i < size_; ++i) {
-                new (new_data + i) T(std::move(data_[i]));
-                data_[i].~T();
+    void reserve(size_t new_capacity) noexcept{
+        if(new_capacity > capacity){
+            T* new_data = new T[new_capacity];
+            for(size_t i = 0; i < size; i++){
+                new_data[i] = data[i];
             }
-            deallocate();
-        }
-        
-        data_ = new_data;
-        capacity_ = new_capacity;
-        size_ = old_size;
-    }
-
-    //функция для копирования диапазона элементов
-    void construct_from_range(const_iterator first, const_iterator last) {
-        size_type count = 0;
-        for (auto it = first; it != last; ++it) {
-            ++count;
-        }
-        
-        if (count == 0) return;
-        
-        allocate(count);
-        size_ = count;
-        
-        size_type i = 0;
-        for (auto it = first; it != last; ++it) {
-            new (data_ + i) T(*it);
-            ++i;
+            delete[] data;
+            data = new_data;
+            capacity = new_capacity;
         }
     }
 
+    void clear(){
+        size = 0;
+    }
 
-public:
 
- MyVector() noexcept = default;
+    // Итераторы
+    T* begin() { return data; }
+    T* end() { return data + size; }
+    const T* begin() const { return data; }
+    const T* end() const { return data + size; }
 
-    explicit MyVector(size_type count) {
-        if (count > 0) {
-            allocate(count);
-            size_ = count;
-            for (size_type i = 0; i < size_; ++i) {
-                new (data_ + i) T();
-            }
+    // проверка на пустоту
+    bool empty() const {
+        return size == 0;
+    }
+
+    // доступ с проверкой границ
+    T& at(size_t index) {
+        if(index >= size){
+            throw std::out_of_range("индекс выходит за пределы диапазона");
+        }
+        return data[index];
+    }
+
+    const T& at(size_t index) const {
+        if(index >= size){
+            throw std::out_of_range("индекс выходит за пределы диапазона");
+        }
+        return data[index];
+    }
+
+    // первый и последний элемент
+    T& front() {
+        return data[0];
+    }
+
+    const T& front() const {
+        return data[0];
+    }
+
+    T& back() {
+        return data[size - 1];
+    }
+
+    const T& back() const {
+        return data[size - 1];
+    }
+
+    // урезать capacity до size
+    void shrink_to_fit() {
+        if(size < capacity){
+            reserve(size);
         }
     }
 
-    //конструктор с заданным количеством элементов и значением
-    MyVector(size_type count, const T& value) {
-        if (count > 0) {
-            allocate(count);
-            size_ = count;
-            for (size_type i = 0; i < size_; ++i) {
-                new (data_ + i) T(value);
-            }
+    // сырой указатель на данные
+    T* data_ptr() { return data; }
+    const T* data_ptr() const { return data; }
+
+    // изменить размер
+    void resize(size_t new_size) {
+        if(new_size > size){
+            if(new_size > capacity) reserve(new_size);
+            for(size_t i = size; i < new_size; ++i) data[i] = T();
         }
+        size = new_size;
     }
 
-    //конструктор для списка списка
-    MyVector(std::initializer_list<T> init) {
-        construct_from_range(init.begin(), init.end());
+
+    // конструктор копирования
+    MyVector(const MyVector& other) : size(other.size), capacity(other.capacity) {
+        data = new T[capacity];
+        for(size_t i = 0; i < size; ++i) data[i] = other.data[i];
     }
 
-    //конструктор копирования
-    MyVector(const MyVector& other) {
-        construct_from_range(other.begin(), other.end());
-    }
-
-    ~MyVector() {
-        destroy_range(data_, data_ + size_);
-        deallocate();
-    }
-
-    //оператор присваивания
+    // оператор присваивания
     MyVector& operator=(const MyVector& other) {
-        if (this != &other) {
-            MyVector temp(other);
-            swap(temp);
+        if(this != &other){
+            delete[] data;
+            size = other.size;
+            capacity = other.capacity;
+            data = new T[capacity];
+            for(size_t i = 0; i < size; ++i) data[i] = other.data[i];
         }
         return *this;
     }
 
 };
-#endif // VECTOR_H
