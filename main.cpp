@@ -1,6 +1,5 @@
 #include "vector.h"
 
-
 int main(){
     MyVector<int> v;
     v.push_back(1);
@@ -44,6 +43,15 @@ int main(){
     // shrink_to_fit
     v.shrink_to_fit();
     std::cout<<"Capacity после shrink_to_fit: "<<v.getCapacity()<<std::endl;
+
+
+    //insert
+    v.insert(1, 4);
+    std::cout<<"После insert(1, 4): ";
+    for(auto x : v){
+        std::cout<<x<<" ";
+    }
+    std::cout<<std::endl;
 
     // конструктор копирования
     MyVector<int> v2 = v;

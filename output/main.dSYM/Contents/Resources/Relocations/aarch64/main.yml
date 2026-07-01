@@ -1,0 +1,27 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/daniil20101008mail.com/Desktop/FullFile/vector/stdVector/output/main'
+relocations:
+  - { offset: 0x24DD, size: 0x8, addend: 0x0, symName: __ZStL8__ioinit, symObjAddr: 0x123C3, symBinAddr: 0x100008000, symSize: 0x0 }
+  - { offset: 0x29FB, size: 0x8, addend: 0x0, symName: __GLOBAL__sub_I_main.cpp, symObjAddr: 0xE44, symBinAddr: 0x100001378, symSize: 0x14 }
+  - { offset: 0x2A12, size: 0x8, addend: 0x0, symName: __Z41__static_initialization_and_destruction_0v, symObjAddr: 0xE08, symBinAddr: 0x10000133C, symSize: 0x3C }
+  - { offset: 0x2A2D, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiE7reserveEm, symObjAddr: 0xB6C, symBinAddr: 0x100001264, symSize: 0xD8 }
+  - { offset: 0x2A9A, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiEaSERKS0_, symObjAddr: 0xA80, symBinAddr: 0x100001178, symSize: 0xEC }
+  - { offset: 0x2B18, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiEC1ERKS0_, symObjAddr: 0x9BC, symBinAddr: 0x1000010B4, symSize: 0xC4 }
+  - { offset: 0x2B61, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiE13shrink_to_fitEv, symObjAddr: 0x978, symBinAddr: 0x100001070, symSize: 0x44 }
+  - { offset: 0x2B89, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiE6resizeEm, symObjAddr: 0x8D8, symBinAddr: 0x100000FD0, symSize: 0xA0 }
+  - { offset: 0x2BE1, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiE3endEv, symObjAddr: 0x8B0, symBinAddr: 0x100000FA8, symSize: 0x28 }
+  - { offset: 0x2C09, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiE5beginEv, symObjAddr: 0x898, symBinAddr: 0x100000F90, symSize: 0x18 }
+  - { offset: 0x2C31, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiE2atEm, symObjAddr: 0x804, symBinAddr: 0x100000EFC, symSize: 0x94 }
+  - { offset: 0x2C68, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiE4backEv, symObjAddr: 0x7D8, symBinAddr: 0x100000ED0, symSize: 0x2C }
+  - { offset: 0x2C90, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiE5frontEv, symObjAddr: 0x7C0, symBinAddr: 0x100000EB8, symSize: 0x18 }
+  - { offset: 0x2CB8, size: 0x8, addend: 0x0, symName: __ZNK8MyVectorIiE5emptyEv, symObjAddr: 0x79C, symBinAddr: 0x100000E94, symSize: 0x24 }
+  - { offset: 0x2CE0, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiE8pop_backEv, symObjAddr: 0x764, symBinAddr: 0x100000E5C, symSize: 0x38 }
+  - { offset: 0x2D08, size: 0x8, addend: 0x0, symName: __ZNK8MyVectorIiE11getCapacityEv, symObjAddr: 0x74C, symBinAddr: 0x100000E44, symSize: 0x18 }
+  - { offset: 0x2D30, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiEixEm, symObjAddr: 0x6B8, symBinAddr: 0x100000DB0, symSize: 0x94 }
+  - { offset: 0x2D67, size: 0x8, addend: 0x0, symName: __ZNK8MyVectorIiE7getSizeEv, symObjAddr: 0x6A0, symBinAddr: 0x100000D98, symSize: 0x18 }
+  - { offset: 0x2D8F, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiE9push_backERKi, symObjAddr: 0x604, symBinAddr: 0x100000CFC, symSize: 0x9C }
+  - { offset: 0x2DFF, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiED1Ev, symObjAddr: 0x5D0, symBinAddr: 0x100000CC8, symSize: 0x34 }
+  - { offset: 0x2E3B, size: 0x8, addend: 0x0, symName: __ZN8MyVectorIiEC1Ev, symObjAddr: 0x5A4, symBinAddr: 0x100000C9C, symSize: 0x2C }
+  - { offset: 0x2E62, size: 0x8, addend: 0x0, symName: _main, symObjAddr: 0x0, symBinAddr: 0x1000006F8, symSize: 0x5A4 }
+...

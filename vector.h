@@ -3,10 +3,7 @@
 #include <memory>
 #include <stdexcept>
 
-
-
 template <typename T>
-
 class MyVector{
     private:
     T* data;
@@ -143,6 +140,19 @@ class MyVector{
             for(size_t i = size; i < new_size; ++i) data[i] = T();
         }
         size = new_size;
+    }
+
+    void insert(size_t index, const T& value){
+        if(index >= size){
+            throw std::out_of_range("индекс выходит за пределы диапазона");
+        }
+        if(size >= capacity){
+            size_t new_capacity = capacity == 0 ? 1 : capacity * 2;
+            reserve(new_capacity);
+        }
+        for(size_t i = size; i > index; --i) data[i] = data[i - 1];
+        data[index] = value;
+        ++size;
     }
 
 
