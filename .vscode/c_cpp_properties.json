@@ -5,6 +5,7 @@
       "includePath": [
         "${workspaceFolder}/**"
       ],
+      "compileCommands": "${workspaceFolder}/build/compile_commands.json",
       "compilerPath": "/usr/bin/clang",
       "cStandard": "${default}",
       "cppStandard": "c++17",

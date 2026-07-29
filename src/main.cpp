@@ -3,6 +3,7 @@
 int main() {
 #ifdef MESSAGE_FROM_GEORGE
     MyVector<TemplateClass> temp_vec;
+    static_cast<void>(temp_vec.data_ptr());
 
     temp_vec.reserve(10);
     temp_vec.push_back({});

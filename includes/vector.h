@@ -167,6 +167,7 @@ class MyVector {
     }
 
     // сырой указатель на данные
+    // cppcheck-suppress unusedFunction
     T *data_ptr() { return data; }
     const T *data_ptr() const { return data; }
 

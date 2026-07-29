@@ -81,6 +81,7 @@ class MyVector {
 
   T* begin() { return data_; }
   const T* begin() const { return data_; }
+  // cppcheck-suppress unusedFunction
   T* end() { return data_ + size_; }
   const T* end() const { return data_ + size_; }
 
@@ -160,6 +161,7 @@ class MyVector {
     ++size_;
   }
 
+  // cppcheck-suppress unusedFunction
   void print() const {
     std::cout << "Vector: ";
     for (std::size_t i = 0; i < size_; ++i) {

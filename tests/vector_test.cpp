@@ -1,7 +1,7 @@
 #include <cstddef>
 #include <stdexcept>
 
-#include <gtest/gtest.h>
+#include "gtest/gtest.h"
 
 #include "vector.h"
 
