@@ -1,177 +1,190 @@
+#ifndef STD_VECTOR_VECTOR_H_
+#define STD_VECTOR_VECTOR_H_
+
+#include <cstddef>
 #include <iostream>
-#include <algorithm>
-#include <memory>
 #include <stdexcept>
 
 template <typename T>
-class MyVector{
-    private:
-    T* data;
-    size_t size;
-    size_t capacity;
+class MyVector {
+ public:
+  MyVector() = default;
 
+  explicit MyVector(std::size_t count)
+      : data_(new T[count]()), size_(count), capacity_(count) {}
 
-    public:
-    MyVector() : data(nullptr), size(0), capacity(0){}
+  ~MyVector() { delete[] data_; }
 
-    explicit MyVector(size_t count) : size(count),capacity(count){
-        data = new T[count];
+  MyVector(const MyVector& other)
+      : data_(new T[other.capacity_]),
+        size_(other.size_),
+        capacity_(other.capacity_) {
+    for (std::size_t i = 0; i < size_; ++i) {
+      data_[i] = other.data_[i];
+    }
+  }
+
+  MyVector& operator=(const MyVector& other) {
+    if (this == &other) {
+      return *this;
     }
 
-
-    ~MyVector(){
-        delete[] data;
+    T* new_data = new T[other.capacity_];
+    for (std::size_t i = 0; i < other.size_; ++i) {
+      new_data[i] = other.data_[i];
     }
 
-    //получение размера
-    size_t getSize() const{
-        return size;
+    delete[] data_;
+    data_ = new_data;
+    size_ = other.size_;
+    capacity_ = other.capacity_;
+    return *this;
+  }
+
+  std::size_t getSize() const { return size_; }
+  std::size_t getCapacity() const { return capacity_; }
+
+  T& operator[](std::size_t index) { return data_[index]; }
+  const T& operator[](std::size_t index) const { return data_[index]; }
+
+  void push_back(const T& value) {
+    if (size_ == capacity_) {
+      reserve(capacity_ == 0 ? 1 : capacity_ * 2);
     }
 
-    //получение вместимости 
-    size_t getCapacity() const{
-        return capacity;
+    data_[size_] = value;
+    ++size_;
+  }
+
+  void pop_back() {
+    if (size_ > 0) {
+      --size_;
+    }
+  }
+
+  void reserve(std::size_t new_capacity) {
+    if (new_capacity <= capacity_) {
+      return;
     }
 
-    T& operator[](size_t index){
-        if(index >= size){
-
-            throw std::out_of_range("индекс выходит за пределы диапазона");
-        }
-        return data[index];
+    T* new_data = new T[new_capacity]();
+    for (std::size_t i = 0; i < size_; ++i) {
+      new_data[i] = data_[i];
     }
 
-    const T& operator[](size_t index)const{
-        if(index >= size){
-            throw std::out_of_range("индекс выходит за пределы диапазона");
-        }
-        return data[index];
+    delete[] data_;
+    data_ = new_data;
+    capacity_ = new_capacity;
+  }
+
+  void clear() { size_ = 0; }
+
+  T* begin() { return data_; }
+  const T* begin() const { return data_; }
+  T* end() { return data_ + size_; }
+  const T* end() const { return data_ + size_; }
+
+  bool empty() const { return size_ == 0; }
+
+  T& at(std::size_t index) {
+    CheckIndex(index);
+    return data_[index];
+  }
+
+  const T& at(std::size_t index) const {
+    CheckIndex(index);
+    return data_[index];
+  }
+
+  T& front() {
+    CheckNotEmpty();
+    return data_[0];
+  }
+
+  const T& front() const {
+    CheckNotEmpty();
+    return data_[0];
+  }
+
+  T& back() {
+    CheckNotEmpty();
+    return data_[size_ - 1];
+  }
+
+  const T& back() const {
+    CheckNotEmpty();
+    return data_[size_ - 1];
+  }
+
+  void shrink_to_fit() {
+    if (size_ == capacity_) {
+      return;
     }
 
-    void push_back(const T& value)noexcept{
-        if(size >= capacity){
-            size_t new_capacity = capacity == 0 ? 1 : capacity * 2;
-            reserve(new_capacity);
-        }
-        data[size++] = value;
+    T* new_data = new T[size_];
+    for (std::size_t i = 0; i < size_; ++i) {
+      new_data[i] = data_[i];
     }
 
-    void pop_back(){
-        if(size > 0){
-            size--;
-        }
+    delete[] data_;
+    data_ = new_data;
+    capacity_ = size_;
+  }
+
+  T* getData() { return data_; }
+  const T* getData() const { return data_; }
+
+  void resize(std::size_t new_size) {
+    if (new_size > capacity_) {
+      reserve(new_size);
+    } else if (new_size > size_) {
+      for (std::size_t i = size_; i < new_size; ++i) {
+        data_[i] = T();
+      }
+    }
+    size_ = new_size;
+  }
+
+  void insert(std::size_t index, const T& value) {
+    if (index > size_) {
+      throw std::out_of_range("insert index is out of range");
+    }
+    if (size_ == capacity_) {
+      reserve(capacity_ == 0 ? 1 : capacity_ * 2);
     }
 
-    void reserve(size_t new_capacity) noexcept{
-        if(new_capacity > capacity){
-            T* new_data = new T[new_capacity];
-            for(size_t i = 0; i < size; i++){
-                new_data[i] = data[i];
-            }
-            delete[] data;
-            data = new_data;
-            capacity = new_capacity;
-        }
+    for (std::size_t i = size_; i > index; --i) {
+      data_[i] = data_[i - 1];
     }
+    data_[index] = value;
+    ++size_;
+  }
 
-    void clear(){
-        size = 0;
+  void print() const {
+    std::cout << "Vector: ";
+    for (std::size_t i = 0; i < size_; ++i) {
+      std::cout << data_[i] << ' ';
     }
+    std::cout << '\n';
+    std::cout << "size=" << size_ << " capacity=" << capacity_ << '\n';
+  }
 
-
-    // Итераторы
-    T* begin() { return data; }
-    T* end() { return data + size; }
-    const T* begin() const { return data; }
-    const T* end() const { return data + size; }
-
-    // проверка на пустоту
-    bool empty() const {
-        return size == 0;
+ private:
+  void CheckIndex(std::size_t index) const {
+    if (index >= size_) {
+      throw std::out_of_range("index is out of range");
     }
+  }
 
-    // доступ с проверкой границ
-    T& at(size_t index) {
-        if(index >= size){
-            throw std::out_of_range("индекс выходит за пределы диапазона");
-        }
-        return data[index];
+  void CheckNotEmpty() const {
+    if (empty()) {
+      throw std::out_of_range("vector is empty");
     }
+  }
 
-    const T& at(size_t index) const {
-        if(index >= size){
-            throw std::out_of_range("индекс выходит за пределы диапазона");
-        }
-        return data[index];
-    }
-
-    // первый и последний элемент
-    T& front() {
-        return data[0];
-    }
-
-    const T& front() const {
-        return data[0];
-    }
-
-    T& back() {
-        return data[size - 1];
-    }
-
-    const T& back() const {
-        return data[size - 1];
-    }
-
-    // урезать capacity до size
-    void shrink_to_fit() {
-        if(size < capacity){
-            reserve(size);
-        }
-    }
-
-    // сырой указатель на данные
-    T* data_ptr() { return data; }
-    const T* data_ptr() const { return data; }
-
-    // изменить размер
-    void resize(size_t new_size) {
-        if(new_size > size){
-            if(new_size > capacity) reserve(new_size);
-            for(size_t i = size; i < new_size; ++i) data[i] = T();
-        }
-        size = new_size;
-    }
-
-    void insert(size_t index, const T& value){
-        if(index >= size){
-            throw std::out_of_range("индекс выходит за пределы диапазона");
-        }
-        if(size >= capacity){
-            size_t new_capacity = capacity == 0 ? 1 : capacity * 2;
-            reserve(new_capacity);
-        }
-        for(size_t i = size; i > index; --i) data[i] = data[i - 1];
-        data[index] = value;
-        ++size;
-    }
-
-
-    // конструктор копирования
-    MyVector(const MyVector& other) : size(other.size), capacity(other.capacity) {
-        data = new T[capacity];
-        for(size_t i = 0; i < size; ++i) data[i] = other.data[i];
-    }
-
-    // оператор присваивания
-    MyVector& operator=(const MyVector& other) {
-        if(this != &other){
-            delete[] data;
-            size = other.size;
-            capacity = other.capacity;
-            data = new T[capacity];
-            for(size_t i = 0; i < size; ++i) data[i] = other.data[i];
-        }
-        return *this;
-    }
-
+  T* data_ = nullptr;
+  std::size_t size_ = 0;
+  std::size_t capacity_ = 0;
 };
+
+#endif  // STD_VECTOR_VECTOR_H_
